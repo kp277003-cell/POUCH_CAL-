@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Pouch Calculator</title>
+<meta name="description" content="Pouch laminate calculator — GSM, weight, PCS/kg, cylinder cost">
+<meta name="theme-color" content="#c8960c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Pouch Calc">
+<script>
+const manifestData = {
+  "name": "Pouch Calculator",
+  "short_name": "Pouch Calc",
+  "description": "Pouch laminate calculator — GSM, PCS/kg, Cylinder Cost",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f9",
+  "theme_color": "#c8960c",
+  "icons": [
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAADnklEQVR4nO3cvXETaxSAYclD6ApuRHCLcEANFOJybkARVEJIATcgogLnEDAwgC1Z0v58Wr3Pk3u1w5x3z7cbsN8N9unD/bfR98A4D49P+5G/v/qPG3iOWTuIVX7M0HOJNWJY9AcMPnNYMoRFLmzwWcISIcx6QYPPGuYMYZYLGXxGmCOEu6kXMPyMMsfsTQrA8DPa1Bm8aIUYfK7RJUeiszeA4edaXTKbZwVg+Ll2587oyQEYfrbinFk9KQDDz9acOrOTP4PClr0agKc/W3XK7B4NwPCzda/N8MEADD+34tgsewcg7cUAPP25NYdm2gYg7VkAnv7cqpdm2wYg7Y8APP25dX/PuA1A2q8APP2p+H3WbQDSBEDa3W7n+EPPz5m3AUgTAGkCIG3v/E+ZDUCaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBEDam9E3cMjbf/4dfQuTffn6/2zX8u+xDBuANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGkCIE0ApAmANAGQJgDSBECaAEgTAGlX+9+j//fx8+hbuDKfR9/AZO/f3Y++hWdsANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIg7c3oGzjk/bv70bdAgA1AmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0u4eHp/2o28CRnh4fNrbAKQJgDQBkHa32/04C42+EVjTz5m3AUgTAGm/AnAMouL3WbcBSPsjAFuAW/f3jNsApD0LwBbgVr002zYAaS8GYAtwaw7NtA1A2sEAbAFuxbFZProBRMDWvTbDrx6BRMBWnTK73gFIOykAW4CtOXVmT94AImArzpnVs45AIuDanTujZ78DiIBrdclsThrmTx/uv035e5jDlIfypK9AtgGjTZ3ByZ9BRcAoc8zerMPrSMQa5nzoLvL0FgJLWOK0sejxRQjMYclj9irndyFwiTXeL1d/gRUDx6z9UWX4FxxBtI3+ivgdzb69Fo4OLCUAAAAASUVORK5CYII=",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/png;base64,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",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+};
+const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+const manifestURL = URL.createObjectURL(manifestBlob);
+const manifestLink = document.createElement('link');
+manifestLink.rel = 'manifest';
+manifestLink.href = manifestURL;
+document.head.appendChild(manifestLink);
+</script>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23c8960c'/><text y='.9em' font-size='80' x='10'>📦</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f6f9; --surface:#ffffff; --surface2:#f0f2f5;
+  --border:rgba(0,0,0,0.07); --border2:rgba(0,0,0,0.10);
+  --accent:#c8960c; --accent2:#a07008;
+  --adim:rgba(200,150,12,0.08); --adim2:rgba(200,150,12,0.12);
+  --text:#1a1a2e; --text2:#5a6278; --text3:#9098b0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Syne',sans-serif;
+  height:100vh;overflow:hidden;
+}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(200,150,12,0.3);border-radius:4px;}
+.layout{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:auto 1fr;
+  height:100vh;
+  max-width:1100px;
+  margin:0 auto;
+  overflow:hidden;
+}
+.header{
+  grid-column:1/-1;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 24px;
+  border-bottom:1px solid var(--border2);
+  background:var(--surface);
+}
+.header-left{display:flex;align-items:center;gap:10px;}
+.logo-box{
+  width:34px;height:34px;
+  background:var(--adim2);
+  border:1px solid rgba(200,150,12,0.3);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+}
+.logo-box svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:1.8;}
+.header h1{font-size:17px;font-weight:800;letter-spacing:-0.3px;}
+
+/* Left panel */
+.panel-left{
+  padding:10px 14px 10px;
+  border-right:1px solid var(--border2);
+  display:flex;flex-direction:column;gap:8px;
+  overflow-y:auto;
+  height:100%;
+}
+/* Right panel */
+.panel-right{
+  padding:12px 16px;
+  display:flex;flex-direction:column;gap:10px;
+  overflow-y:auto;
+  height:100%;
+}
+
+/* Layer selector */
+.layer-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.layer-btn{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:10px;padding:6px 8px 5px;
+  text-align:center;cursor:pointer;
+  transition:border-color 0.2s,background 0.2s;
+}
+.layer-btn:hover{background:rgba(200,150,12,0.05);}
+.layer-btn.active{border-color:var(--accent);background:var(--adim2);}
+.layer-num{font-size:18px;font-weight:800;color:var(--text3);line-height:1;transition:color 0.2s;}
+.layer-btn.active .layer-num{color:var(--accent);}
+.layer-label{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:0.8px;transition:color 0.2s;}
+.layer-btn.active .layer-label{color:var(--accent2);}
+.layer-dots{display:flex;justify-content:center;gap:3px;margin-top:4px;}
+.layer-dots span{width:3px;height:3px;border-radius:50%;background:var(--border2);transition:background 0.2s;}
+.layer-btn.active .layer-dots span{background:var(--accent);}
+
+/* Card */
+.card{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:14px;padding:10px 12px;
+}
+.card-title{
+  font-size:10px;font-weight:500;font-family:'DM Mono',monospace;
+  color:var(--text);text-transform:uppercase;letter-spacing:1.5px;
+  margin-bottom:10px;text-align:center;
+}
+
+/* Inputs */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.input-group{display:flex;flex-direction:column;gap:4px;}
+.input-label{font-size:10px;color:var(--text);font-family:'DM Mono',monospace;text-align:center;font-weight:500;}
+.input-wrap{position:relative;}
+.input-wrap input{
+  width:100%;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:8px;padding:8px 44px 8px 10px;
+  font-size:22px;font-weight:700;color:var(--text);
+  font-family:'DM Mono',monospace;outline:none;
+  text-align:center;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  -moz-appearance:textfield;
+}
+.input-wrap input::-webkit-outer-spin-button,
+.input-wrap input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.input-wrap input:focus{border-color:rgba(220,38,38,0.8)!important;box-shadow:0 0 0 3px rgba(220,38,38,0.12)!important;outline:none;}
+.input-unit{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-size:15px;font-weight:600;color:var(--text2);
+  font-family:'DM Mono',monospace;pointer-events:none;padding-left:6px;
+}
+
+/* Layer blocks */
+.layers-wrap{display:flex;flex-direction:column;gap:8px;}
+.layer-block{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;padding:8px 10px;
+  animation:slideIn 0.25s ease both;
+}
+@keyframes slideIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.layer-block-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.layer-pill{font-size:10px;font-family:'DM Mono',monospace;font-weight:500;text-transform:uppercase;letter-spacing:1px;padding:2px 8px;border-radius:20px;}
+.gsm-badge{
+  font-size:10px;font-family:'DM Mono',monospace;color:var(--accent2);
+  margin-left:auto;background:var(--adim);border:1px solid rgba(200,150,12,0.25);
+  padding:2px 8px;border-radius:20px;opacity:0;transition:opacity 0.3s;
+}
+.gsm-badge.show{opacity:1;}
+
+/* Calc button */
+.calc-btn{
+  width:100%;background:var(--accent);color:#000;
+  border:none;border-radius:11px;padding:12px;
+  font-size:14px;font-weight:700;font-family:'Syne',sans-serif;
+  cursor:pointer;transition:background 0.2s,transform 0.1s;
+  flex-shrink:0;
+}
+.calc-btn:hover{background:#e0aa10;}
+.calc-btn:active{transform:scale(0.98);}
+
+/* Results */
+.results-placeholder{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:10px;color:var(--text3);
+}
+.results-placeholder svg{width:40px;height:40px;stroke:var(--text3);fill:none;stroke-width:1.2;opacity:0.4;}
+.results-placeholder p{font-size:12px;font-family:'DM Mono',monospace;text-align:center;line-height:1.6;}
+.results-content{display:none;flex-direction:column;gap:8px;margin-top:0;}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;}
+.metric{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:10px;padding:8px 10px;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.metric-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--text);font-weight:500;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px;text-align:center;}
+.metric-val{font-size:18px;font-weight:700;color:var(--text);letter-spacing:-0.5px;line-height:1;text-align:center;}
+.metric-unit{font-size:11px;color:var(--text2);font-family:'DM Mono',monospace;margin-top:4px;text-align:center;}
+.metric-big{
+  background:#ffffff;border:2px solid #e53935;
+  border-radius:10px;padding:10px 12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+}
+.metric-big .metric-label{color:#e53935;font-weight:500;margin-bottom:4px;}
+.metric-big .metric-val{font-size:40px;color:#e53935;letter-spacing:-1px;font-weight:800;line-height:1;text-shadow:0 2px 12px rgba(229,57,53,0.25);}
+.metric-big .metric-unit{font-size:11px;color:#e53935;font-family:'DM Mono',monospace;margin-top:4px;text-align:center;}
+
+/* Layer colors */
+.lc0{background:rgba(200,150,12,0.12);color:#a07008;border-color:rgba(200,150,12,0.3);}
+.lc1{background:rgba(30,130,220,0.10);color:#1565c0;border-color:rgba(30,130,220,0.25);}
+.lc2{background:rgba(210,120,0,0.10);color:#b05c00;border-color:rgba(210,120,0,0.25);}
+.lb0{border-left:2px solid #c8960c;}
+.lb1{border-left:2px solid #1e82dc;}
+.lb2{border-left:2px solid #d27800;}
+
+/* Bottom tab bar */
+.bottom-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:#fffde7;
+  border-top:2px solid rgba(200,150,12,0.2);
+  display:flex;justify-content:center;align-items:center;
+  padding:6px 0 8px;z-index:100;
+  box-shadow:0 -2px 12px rgba(0,0,0,0.06);
+}
+.btab{
+  display:flex;flex-direction:column;align-items:center;
+  padding:4px 32px;cursor:pointer;
+  border-right:1px solid rgba(200,150,12,0.15);
+}
+.btab:last-child{border-right:none;}
+.btab-icon{font-size:24px;line-height:1;margin-bottom:2px;filter:grayscale(0.5);transition:filter 0.2s;}
+.btab-label{font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--text3);transition:color 0.2s;white-space:nowrap;}
+.btab-dot{width:5px;height:5px;border-radius:50%;background:transparent;margin-top:3px;transition:background 0.2s;}
+.active-bt .btab-icon{filter:none;}
+.active-bt .btab-label{color:var(--accent);}
+.active-bt .btab-dot{background:var(--accent);}
+.panel-left{padding-bottom:75px!important;}
+.panel-right{padding-bottom:75px!important;}
+
+/* Sup with Zip panel */
+.zip-panel{display:none;flex-direction:column;gap:10px;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.zip-mode .panel-left{display:none;}
+.zip-mode .panel-right{grid-column:1/-1;}
+.fade-in{animation:fadeIn 0.35s ease both;}
+
+
+/* ── Mobile (up to 600px) ── */
+@media(max-width:600px){
+  body{overflow-y:auto;height:auto;}
+  .layout{grid-template-columns:1fr;grid-template-rows:auto auto auto;height:auto;padding-bottom:80px;}
+  .panel-left{border-right:none;border-bottom:1px solid var(--border2);padding:10px 10px 0;}
+  .panel-right{padding:10px;min-height:auto;}
+  .layer-selector{gap:6px;}
+  .layer-num{font-size:16px;}
+  .input-wrap input{font-size:16px;padding:8px 38px 8px 8px;}
+  .input-unit{font-size:12px;}
+  .metrics-grid{grid-template-columns:1fr 1fr;}
+  .bottom-bar{padding:4px 0 6px;}
+  .btab{padding:3px 14px;}
+  .btab-icon{font-size:20px;}
+  .btab-label{font-size:10px;}
+  .zip-panel{padding:8px;}
+  .header h1{font-size:14px;}
+  .layout.zip-mode .panel-right{padding:8px;}
+}
+
+/* ── Tablet (601px – 900px) ── */
+@media(min-width:601px) and (max-width:900px){
+  body{overflow-y:auto;height:auto;}
+  .layout{grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr;height:auto;min-height:100vh;}
+  .panel-left{padding:12px 12px 0;}
+  .panel-right{padding:12px;}
+  .input-wrap input{font-size:18px;}
+  .metrics-grid{grid-template-columns:1fr 1fr;}
+  .btab{padding:4px 18px;}
+}
+
+/* ── Laptop/Desktop (901px+) ── */
+@media(min-width:901px){
+  .layout{max-width:1100px;margin:0 auto;}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo-box">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+      </div>
+      <h1>Pouch Calculator</h1>
+    </div>
+    <button id="install-btn" onclick="installApp()" style="display:none;align-items:center;gap:6px;background:var(--accent);color:#000;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;">
+      📲 Install App
+    </button>
+  </div>
+
+  <!-- Left: Inputs -->
+  <div class="panel-left">
+
+    <div class="layer-selector">
+      <div class="layer-btn active" id="btn3" onclick="selectLayer(3)">
+        <div class="layer-num">3</div>
+        <div class="layer-label">Layer</div>
+        <div class="layer-dots"><span></span><span></span><span></span></div>
+      </div>
+      <div class="layer-btn" id="btn2" onclick="selectLayer(2)">
+        <div class="layer-num">2</div>
+        <div class="layer-label">Layer</div>
+        <div class="layer-dots"><span></span><span></span></div>
+      </div>
+      <div class="layer-btn" id="btn1" onclick="selectLayer(1)">
+        <div class="layer-num">1</div>
+        <div class="layer-label">Layer</div>
+        <div class="layer-dots"><span></span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="font-size:16px;font-weight:700;font-family:'DM Mono',monospace;color:var(--text);white-space:nowrap;">Combination</div>
+        <div style="flex:1;position:relative;">
+          <input type="text" id="pouchName" placeholder="Type combination..." autocomplete="off"
+            style="width:100%;background:var(--adim2);border:1px solid rgba(200,150,12,0.35);border-radius:8px;padding:9px 12px;font-size:14px;font-weight:700;color:var(--accent2);font-family:'DM Mono',monospace;text-align:center;letter-spacing:0.5px;outline:none;transition:border-color 0.2s;"
+            onfocus="this.style.borderColor='rgba(220,38,38,0.8)';this.value='';showCombSuggest()"
+            oninput="showCombSuggest()"
+            onblur="setTimeout(()=>{const s=document.getElementById('combSug');if(s)s.style.display='none'},200)">
+          <div id="combSug" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--border2);border-radius:10px;z-index:99;margin-top:4px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.12);max-height:220px;overflow-y:auto;"></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <div class="input-group">
+          <div class="input-label">Open width</div>
+          <div class="input-wrap">
+            <input type="number" id="W" value="520" min="1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Length</div>
+          <div class="input-wrap">
+            <input type="number" id="L" value="300" min="1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+            <span class="input-unit">mm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Adhesive GSM</div>
+          <div class="input-wrap">
+            <input type="number" id="sealGsm" value="6" min="0" step="0.1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+            <span class="input-unit">g/m²</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Material layers</div>
+      <div class="layers-wrap" id="layers-wrap"></div>
+    </div>
+
+    <button class="calc-btn" onclick="calculate()">Calculate Pouches / kg</button>
+
+  </div>
+
+  <!-- Right: Results -->
+  <div class="panel-right">
+
+    <div class="results-placeholder" id="placeholder" style="display:none;">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+      <p>Layer, size અને micron/density<br>ભરો — Calculate દબાવો</p>
+    </div>
+
+    <div class="results-content" id="results-content">
+      <div class="metrics-grid">
+        <div class="metric">
+          <div class="metric-label">Total micron</div>
+          <div class="metric-val" id="r-mic">—</div>
+          <div class="metric-unit">mic</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Total GSM</div>
+          <div class="metric-val" id="r-gsm">—</div>
+          <div class="metric-unit">g/m²</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Weight / pouch</div>
+          <div class="metric-val" id="r-wt">—</div>
+          <div class="metric-unit">grams</div>
+        </div>
+        <div class="metric-big">
+          <div class="metric-label">Pouches per kg</div>
+          <div class="metric-val" id="r-nos">—</div>
+          <div class="metric-unit">nos</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sup without Zip Panel -->
+    <div class="zip-panel" id="supnz-panel">
+
+      <div class="layer-selector" style="grid-template-columns:1fr 1fr;">
+        <div class="layer-btn active" id="snzbtn3" onclick="selectSupnzLayer(3)">
+          <div class="layer-num">3</div><div class="layer-label">Layer</div>
+          <div class="layer-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="layer-btn" id="snzbtn2" onclick="selectSupnzLayer(2)">
+          <div class="layer-num">2</div><div class="layer-label">Layer</div>
+          <div class="layer-dots"><span></span><span></span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="font-size:16px;font-weight:700;font-family:'DM Mono',monospace;color:var(--text);white-space:nowrap;">Combination</div>
+          <div style="flex:1;position:relative;">
+            <input type="text" id="snzComb" placeholder="Type combination..." autocomplete="off"
+              style="width:100%;background:var(--adim2);border:1px solid rgba(200,150,12,0.35);border-radius:8px;padding:9px 12px;font-size:14px;font-weight:700;color:var(--accent2);font-family:'DM Mono',monospace;text-align:center;letter-spacing:0.5px;outline:none;"
+              onfocus="this.style.borderColor='rgba(220,38,38,0.8)';this.value='';showSnzCombSuggest()"
+              oninput="showSnzCombSuggest()"
+              onblur="setTimeout(()=>{const s=document.getElementById('snzCombSug');if(s)s.style.display='none'},200)">
+            <div id="snzCombSug" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--border2);border-radius:10px;z-index:99;margin-top:4px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.12);max-height:200px;overflow-y:auto;"></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
+          <div class="input-group">
+            <div class="input-label">Pouch Width</div>
+            <div class="input-wrap">
+              <input type="number" id="snzW" value="205" min="1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">mm</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Pouch Length</div>
+            <div class="input-wrap">
+              <input type="number" id="snzL" value="305" min="1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">mm</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Gusset</div>
+            <div class="input-wrap">
+              <input type="number" id="snzG" value="100" min="0" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">mm</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Adhesive GSM</div>
+            <div class="input-wrap">
+              <input type="number" id="snzSeal" value="6" min="0" step="0.1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">g/m²</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Material layers</div>
+        <div id="snzlayers-wrap"></div>
+      </div>
+
+      <button class="calc-btn" onclick="calcSupnz()">Calculate Sup w/o Zip</button>
+
+      <div id="snz-results" style="display:none;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div class="metric">
+            <div class="metric-label">Total Mic</div>
+            <div class="metric-val" id="snzr-mic">—</div>
+            <div class="metric-unit">mic</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Open Size</div>
+            <div class="metric-val" id="snzr-ow">—</div>
+            <div class="metric-unit">mm</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Length</div>
+            <div class="metric-val" id="snzr-len">—</div>
+            <div class="metric-unit">mm</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Pouch Wt</div>
+            <div class="metric-val" id="snzr-wt">—</div>
+            <div class="metric-unit">grams</div>
+          </div>
+        </div>
+        <div class="metric-big">
+          <div class="metric-label">PCS / KG</div>
+          <div class="metric-val" id="snzr-pcs">—</div>
+          <div class="metric-unit">nos</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sup with Zip Panel -->
+    <div class="zip-panel" id="zip-panel">
+
+      <!-- Layer selector for zip -->
+      <div class="layer-selector" style="grid-template-columns:1fr 1fr;">
+        <div class="layer-btn active" id="zbtn3" onclick="selectZipLayer(3)">
+          <div class="layer-num">3</div><div class="layer-label">Layer</div>
+          <div class="layer-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="layer-btn" id="zbtn2" onclick="selectZipLayer(2)">
+          <div class="layer-num">2</div><div class="layer-label">Layer</div>
+          <div class="layer-dots"><span></span><span></span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="font-size:16px;font-weight:700;font-family:'DM Mono',monospace;color:var(--text);white-space:nowrap;">Combination</div>
+          <div style="flex:1;position:relative;">
+            <input type="text" id="zComb" placeholder="Type combination..." autocomplete="off"
+              style="width:100%;background:var(--adim2);border:1px solid rgba(200,150,12,0.35);border-radius:8px;padding:9px 12px;font-size:14px;font-weight:700;color:var(--accent2);font-family:'DM Mono',monospace;text-align:center;letter-spacing:0.5px;outline:none;"
+              onfocus="this.style.borderColor='rgba(220,38,38,0.8)';this.value='';showZCombSuggest()"
+              oninput="showZCombSuggest()"
+              onblur="setTimeout(()=>{const s=document.getElementById('zCombSug');if(s)s.style.display='none'},200)">
+            <div id="zCombSug" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--border2);border-radius:10px;z-index:99;margin-top:4px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.12);max-height:200px;overflow-y:auto;"></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div class="input-group">
+            <div class="input-label">Pouch Width</div>
+            <div class="input-wrap">
+              <input type="number" id="zW" value="205" min="1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">mm</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Pouch Length</div>
+            <div class="input-wrap">
+              <input type="number" id="zL" value="305" min="1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">mm</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Gusset</div>
+            <div class="input-wrap">
+              <input type="number" id="zG" value="100" min="0" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">mm</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+          <div class="input-group">
+            <div class="input-label">Adhesive GSM</div>
+            <div class="input-wrap">
+              <input type="number" id="zSeal" value="6" min="0" step="0.1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">g/m²</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Zipper Size</div>
+            <div class="input-wrap">
+              <input type="text" id="zZipSize" value="13mm" readonly style="font-size:18px;font-weight:700;background:var(--surface2);color:var(--text3);cursor:not-allowed;">
+              <span class="input-unit">mm</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Zipper Wt</div>
+            <div class="input-wrap">
+              <input type="number" id="zZip" value="0.00537" readonly style="background:var(--surface2);color:var(--text3);cursor:not-allowed;">
+              <span class="input-unit">kg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Material layers</div>
+        <div id="zlayers-wrap"></div>
+      </div>
+
+      <button class="calc-btn" onclick="calcZip()">Calculate Sup with Zip</button>
+
+      <div id="zip-results" style="display:none;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div class="metric">
+            <div class="metric-label">Total Mic</div>
+            <div class="metric-val" id="zr-mic">—</div>
+            <div class="metric-unit">mic</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Open Size</div>
+            <div class="metric-val" id="zr-ow">—</div>
+            <div class="metric-unit">mm</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Length</div>
+            <div class="metric-val" id="zr-len">—</div>
+            <div class="metric-unit">mm</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Pouch Wt</div>
+            <div class="metric-val" id="zr-wt">—</div>
+            <div class="metric-unit">grams</div>
+          </div>
+        </div>
+        <div class="metric-big">
+          <div class="metric-label">PCS / KG</div>
+          <div class="metric-val" id="zr-pcs">—</div>
+          <div class="metric-unit">nos</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cylinder Cost Panel -->
+    <div class="zip-panel" id="cyl-panel">
+      <div class="card">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div class="input-group">
+            <div class="input-label">Pouch Width</div>
+            <div class="input-wrap">
+              <input type="number" id="cylW" oninput="calcCylinder()" value="340" min="1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">mm</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Pouch Height</div>
+            <div class="input-wrap">
+              <input type="number" id="cylH" oninput="calcCylinder()" value="220" min="1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">mm</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">UPS</div>
+            <div class="input-wrap">
+              <input type="number" id="cylUps" oninput="calcCylinder()" value="2" min="1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">nos</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Circum Repeat</div>
+            <div class="input-wrap">
+              <input type="number" id="cylRepeat" oninput="calcCylinder()" value="2" min="1" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+              <span class="input-unit">nos</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
+          <div class="input-group">
+            <div class="input-label">Extra Space</div>
+            <div class="input-wrap">
+              <input type="number" id="cylExtra" value="120" min="0" style="background:var(--surface2);border-color:rgba(200,150,12,0.2);color:var(--text3);" readonly>
+              <span class="input-unit">mm</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">SQ.MM Price</div>
+            <div class="input-wrap">
+              <input type="number" id="cylRate" value="21" min="0" step="0.5" style="background:var(--surface2);border-color:rgba(200,150,12,0.2);color:var(--text3);" readonly>
+              <span class="input-unit">₹</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Transport / cyl</div>
+            <div class="input-wrap">
+              <input type="number" id="cylTransport" value="200" min="0" style="background:var(--surface2);border-color:rgba(200,150,12,0.2);color:var(--text3);" readonly>
+              <span class="input-unit">₹</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Job Colours</div>
+            <div class="input-wrap">
+              <input type="number" id="cylColors" oninput="calcCylinder()" value="0" min="0" max="12" onfocus="this.select()" onblur="if(this.value==='')this.value='0'" style="background:var(--adim2);border-color:rgba(200,150,12,0.35);">
+              <span class="input-unit">nos</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div id="cyl-results" style="display:none;">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div class="metric" style="border-left:3px solid #c8960c;">
+              <div class="metric-label">Cyl Circum</div>
+              <div class="metric-val" id="cylr-circ" style="font-size:32px;font-weight:800;">—</div>
+              <div class="metric-unit">mm</div>
+            </div>
+            <div class="metric" style="border-left:3px solid #c8960c;">
+              <div class="metric-label">Cyl Width</div>
+              <div class="metric-val" id="cylr-w" style="font-size:32px;font-weight:800;">—</div>
+              <div class="metric-unit">mm</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border2);border-left:3px solid #1e82dc;border-radius:10px;padding:8px 14px;">
+            <div style="font-size:18px;font-weight:700;color:var(--text);white-space:nowrap;font-family:'DM Mono',monospace;">SQ.MM</div>
+            <div style="flex:1;"></div>
+            <div style="font-size:30px;font-weight:800;color:var(--text);letter-spacing:-0.5px;" id="cylr-area">—</div>
+
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border2);border-left:3px solid #d27800;border-radius:8px;padding:5px 12px;">
+            <div style="font-size:14px;font-weight:800;color:var(--text);white-space:nowrap;font-family:'DM Mono',monospace;">1 Cylinder Price</div>
+            <div style="flex:1;"></div>
+            <div style="font-size:25px;font-weight:800;color:var(--text);letter-spacing:-0.5px;" id="cylr-1price">—</div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border2);border-left:3px solid #d27800;border-radius:8px;padding:8px 14px;">
+            <div style="font-size:14px;font-weight:800;color:var(--text);white-space:nowrap;font-family:'DM Mono',monospace;">Total with GST (18%)</div>
+            <div style="flex:1;"></div>
+            <div style="font-size:25px;font-weight:800;color:var(--text);letter-spacing:-0.5px;line-height:1;vertical-align:middle;" id="cylr-gst">—</div>
+          </div>
+
+          <div id="total-cyl-row" style="display:none;align-items:center;gap:10px;background:linear-gradient(135deg,#1a237e,#283593);border:none;border-radius:10px;padding:10px 14px;">
+            <div style="font-size:14px;font-weight:800;color:#fff;white-space:nowrap;font-family:'DM Mono',monospace;">Total Cylinder Amount</div>
+            <div style="flex:1;"></div>
+            <div style="font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.5px;line-height:1;vertical-align:middle;" id="cylr-total">—</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bottom Tab Bar -->
+<div class="bottom-bar">
+  <div class="btab active-bt" id="bt-center" onclick="toggleSeal()">
+    <div class="btab-icon">📦</div>
+    <div class="btab-label" id="seal-label">Center Seal</div>
+    <div class="btab-dot"></div>
+  </div>
+  <div class="btab" id="bt-supnz" onclick="selectType('supnz')">
+    <div class="btab-icon">👜</div>
+    <div class="btab-label">Sup w/o Zip</div>
+    <div class="btab-dot"></div>
+  </div>
+  <div class="btab" id="bt-zip" onclick="selectType('zip')">
+    <div class="btab-icon">🤐</div>
+    <div class="btab-label">Sup with Zip</div>
+    <div class="btab-dot"></div>
+  </div>
+  <div class="btab" id="bt-cyl" onclick="selectType('cyl')">
+    <div class="btab-icon">🧮</div>
+    <div class="btab-label">Cylinder Cost</div>
+    <div class="btab-dot"></div>
+  </div>
+</div>
+
+<script>
+const combDB = [
+  'PET + LD','PET + PET + LD','PET + MPET + LD','BOPP + LD','BOPP + CPP',
+  'BOPP + BOPP','MBOPP + LD','MBOPP + CPP','MET BOPP + MPET + LD',
+  'PET + Alu Foil + LD','PET + Alu Foil + CPP','PET + CPP','PET + MCPP',
+  'Nylon + LD','Nylon + CPP','PET + Nylon + LD','PET + Nylon + CPP',
+  'PET + EVOH + LD','PET + PVDC + LD','PET + PET + CPP','HDPE + LDPE',
+];
+
+try{
+  const saved=localStorage.getItem('customCombs');
+  if(saved){ const arr=JSON.parse(saved); arr.forEach(c=>{if(!combDB.includes(c))combDB.unshift(c);}); }
+}catch(e){}
+
+function showCombSuggest(){
+  const inp=document.getElementById('pouchName');
+  const box=document.getElementById('combSug');
+  if(!inp||!box) return;
+  const val=inp.value.toLowerCase().trim();
+  const matches=val?combDB.filter(c=>c.toLowerCase().includes(val)):combDB;
+  if(!matches.length){box.style.display='none';return;}
+  box.innerHTML=matches.map(c=>{
+    const esc=c.replace(/'/g,"\\'");
+    const hi=val?c.replace(new RegExp('('+val+')','gi'),'<b style="color:var(--accent)">$1</b>'):c;
+    return `<div onclick="pickComb('${esc}')" style="padding:10px 14px;font-size:13px;font-family:'DM Mono',monospace;cursor:pointer;border-bottom:1px solid var(--border);color:var(--text);" onmouseover="this.style.background='var(--adim)'" onmouseout="this.style.background=''">${hi}</div>`;
+  }).join('');
+  box.style.display='block';
+}
+
+function addCustomComb(val){
+  val=val.trim(); if(!val) return;
+  if(!combDB.includes(val)){ combDB.unshift(val); try{localStorage.setItem('customCombs',JSON.stringify(combDB.slice(0,50)));}catch(e){} }
+  document.getElementById('combSug').style.display='none';
+}
+
+const matDB=[
+  {name:'PET',den:1.40},{name:'BOPET',den:1.40},{name:'MPET',den:1.40},{name:'MET PET',den:1.40},
+  {name:'PP',den:0.91},{name:'BOPP',den:0.91},{name:'CPP',den:0.91},{name:'MBOPP',den:0.91},
+  {name:'LD',den:0.93},{name:'Milky LD',den:0.95},{name:'LDPE',den:0.92},{name:'HDPE',den:0.96},{name:'LLDPE',den:0.92},
+  {name:'Nylon',den:1.14},{name:'BOPA',den:1.14},
+  {name:'Alu Foil',den:2.70},{name:'PVDC',den:1.70},{name:'Metallize',den:1.40},
+  {name:'EVA',den:0.94},{name:'PVC',den:1.38},{name:'EVOH',den:1.19},
+];
+
+function pickComb(val){
+  const inp=document.getElementById('pouchName');
+  if(inp){inp.value=val;inp.style.borderColor='rgba(200,150,12,0.5)';}
+  document.getElementById('combSug').style.display='none';
+  const parts=val.split('+').map(s=>s.trim());
+  const n=parts.length;
+  if(n>=1&&n<=3){
+    selectLayer(n);
+    setTimeout(()=>{
+      parts.forEach((matName,i)=>{
+        const mat=matDB.find(m=>m.name.toLowerCase()===matName.toLowerCase());
+        if(mat){ const dnEl=document.getElementById('dn'+i); if(dnEl){dnEl.value=mat.den;updateGsm(i);} }
+      });
+      const inp2=document.getElementById('pouchName');
+      if(inp2) inp2.value=val;
+    },80);
+  }
+}
+
+const defaults=[{mic:12,den:1.4},{mic:12,den:1.4},{mic:50,den:0.93}];
+let currentLayers=3;
+let selectedType='center';
+let sealToggle='center';
+
+function selectLayer(n){
+  currentLayers=n;
+  [1,2,3].forEach(i=>document.getElementById('btn'+i).classList.toggle('active',i===n));
+  buildLayers(n);
+  document.getElementById('results-content').style.display='none';
+}
+
+function buildLayers(n){
+  const wrap=document.getElementById('layers-wrap');
+  wrap.innerHTML='';
+  const row=document.createElement('div');
+  const cols=n===1?'1fr':n===2?'1fr 1fr':'1fr 1fr 1fr';
+  row.style.cssText='display:grid;grid-template-columns:'+cols+';gap:8px;';
+  for(let i=0;i<n;i++) row.appendChild(makeBlock(i));
+  wrap.appendChild(row);
+  setTimeout(updateCombination,50);
+}
+
+function makeBlock(i){
+  const d=defaults[i]||{mic:12,den:1.4};
+  const div=document.createElement('div');
+  div.className=`layer-block lb${i}`;
+  div.style.animationDelay=(i*0.05)+'s';
+  div.innerHTML=`
+    <div class="layer-block-header"><span class="layer-pill lc${i}">Layer ${i+1}</span></div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="input-group">
+        <div class="input-label">Micron</div>
+        <div class="input-wrap">
+          <input type="number" id="mc${i}" value="${d.mic}" min="0.1" step="0.1" oninput="updateGsm(${i})" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+          <span class="input-unit">mic</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="input-label">Density</div>
+        <div class="input-wrap">
+          <input type="number" id="dn${i}" value="${d.den}" min="0.01" step="0.01" oninput="updateGsm(${i})" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue">
+          <span class="input-unit">g/cc</span>
+        </div>
+      </div>
+      <div class="gsm-badge show" id="gb${i}" style="opacity:1;text-align:center;width:100%;display:block;">GSM = ${(d.mic*d.den).toFixed(2)}</div>
+    </div>`;
+  return div;
+}
+
+function updateGsm(i){
+  const m=parseFloat(document.getElementById('mc'+i).value)||0;
+  const d=parseFloat(document.getElementById('dn'+i).value)||0;
+  const badge=document.getElementById('gb'+i);
+  if(m&&d){badge.textContent='GSM = '+(m*d).toFixed(2);badge.classList.add('show');}
+  else{badge.classList.remove('show');}
+  updateCombination();
+}
+
+function updateCombination(){
+  const parts=[];
+  for(let i=0;i<currentLayers;i++){
+    const den=document.getElementById('dn'+i)?.value||'';
+    const mat=matDB.find(m=>parseFloat(m.den)===parseFloat(den));
+    const name=mat?mat.name:'';
+    if(name) parts.push(name);
+  }
+  const el=document.getElementById('pouchName');
+  if(el) el.value=parts.length?parts.join(' + '):'';
+}
+
+function toggleSeal(){
+  sealToggle=sealToggle==='center'?'3side':'center';
+  selectedType=sealToggle;
+  const lbl=document.getElementById('seal-label');
+  if(lbl) lbl.textContent=sealToggle==='center'?'Center Seal':'3 Side Seal';
+  document.getElementById('bt-center').classList.add('active-bt');
+  document.getElementById('bt-zip').classList.remove('active-bt');
+  // Show left panel inputs, hide zip panel
+  document.getElementById('zip-panel').style.display='none';
+  document.querySelector('.panel-left').style.display='flex';
+}
+
+function selectType(t){
+  selectedType=t;
+  document.getElementById('bt-center').classList.toggle('active-bt',t!=='zip');
+  document.getElementById('bt-zip').classList.toggle('active-bt',t==='zip');
+  const zipPanel=document.getElementById('zip-panel');
+  const placeholder=document.getElementById('placeholder');
+  const results=document.getElementById('results-content');
+  const layout=document.querySelector('.layout');
+  const supnzPanel=document.getElementById('supnz-panel');
+  const supnzBt=document.getElementById('bt-supnz');
+  if(t==='zip'){
+    zipPanel.style.display='flex';
+    if(supnzPanel) supnzPanel.style.display='none';
+    placeholder.style.display='none';
+    results.style.display='none';
+    if(layout) layout.classList.add('zip-mode');
+  } else if(t==='supnz'){
+    if(supnzPanel) supnzPanel.style.display='flex';
+    zipPanel.style.display='none';
+    placeholder.style.display='none';
+    results.style.display='none';
+    if(layout) layout.classList.add('zip-mode');
+  } else {
+    zipPanel.style.display='none';
+    if(supnzPanel) supnzPanel.style.display='none';
+    if(layout) layout.classList.remove('zip-mode');
+  }
+  if(supnzBt) supnzBt.classList.toggle('active-bt', t==='supnz');
+  const cylPanel=document.getElementById('cyl-panel');
+  const cylBt=document.getElementById('bt-cyl');
+  if(cylPanel) cylPanel.style.display=(t==='cyl')?'flex':'none';
+  if(cylBt) cylBt.classList.toggle('active-bt', t==='cyl');
+  if(t==='cyl'){
+    placeholder.style.display='none';
+    results.style.display='none';
+    if(layout) layout.classList.add('zip-mode');
+  }
+}
+
+function calculate(){
+  const wMmRaw=parseFloat(document.getElementById('W').value)||0;
+  const lMm=parseFloat(document.getElementById('L').value)||0;
+  const sealGsm=parseFloat(document.getElementById('sealGsm').value)||0;
+  if(!wMmRaw||!lMm) return;
+  const wMm=wMmRaw;
+  const wMt=wMm/1000,lMt=lMm/1000,sqMt=wMt*lMt;
+  let totalMic=0,layerGsm=0,layerWt=0;
+  for(let i=0;i<currentLayers;i++){
+    const mic=parseFloat(document.getElementById('mc'+i).value)||0;
+    const den=parseFloat(document.getElementById('dn'+i).value)||0;
+    const gsm=mic*den;
+    totalMic+=mic;layerGsm+=gsm;layerWt+=lMt*gsm*wMt;
+  }
+  const sealWt=sqMt*sealGsm;
+  const totalWt=layerWt+sealWt;
+  const totalGsm=layerGsm+sealGsm;
+  const nos=totalWt>0?Math.floor(1000/totalWt):0;
+  const typeLbl={'center':'Center Seal (W×2)','3side':'3 Side Seal','zip':'Sup with Zip'};
+
+  document.getElementById('r-mic').textContent=totalMic.toFixed(1);
+  document.getElementById('r-gsm').textContent=totalGsm.toFixed(2);
+  document.getElementById('r-wt').textContent=totalWt.toFixed(4);
+  document.getElementById('r-nos').textContent=nos;
+  // placeholder already hidden
+  const rc=document.getElementById('results-content');
+  rc.style.display='flex';rc.classList.add('fade-in');
+}
+
+// Zip layers
+let currentZipLayers = 3;
+
+function selectZipLayer(n){
+  currentZipLayers = n;
+  [1,2,3].forEach(i=>{
+    const b=document.getElementById('zbtn'+i);
+    if(b) b.classList.toggle('active',i===n);
+  });
+  buildZipLayers(n);
+  // 2 layer = no zipper by default; 3 layer = zipper default
+  const zipEl = document.getElementById('zZip');
+  const zipSizeEl = document.getElementById('zZipSize');
+  if(n===2){
+    if(zipEl) zipEl.value='0';
+    if(zipSizeEl) zipSizeEl.value='';
+  } else {
+    if(zipEl) zipEl.value='0.00537';
+    if(zipSizeEl) zipSizeEl.value='13mm';
+  }
+  document.getElementById('zip-results').style.display='none';
+}
+
+function buildZipLayers(n){
+  const wrap=document.getElementById('zlayers-wrap');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  const zdefs3=[{mic:12,den:1.4},{mic:12,den:1.4},{mic:80,den:0.93}];
+  const zdefs2=[{mic:12,den:1.4},{mic:80,den:0.93}];
+  const zdefs = n===2 ? zdefs2 : zdefs3;
+  const row=document.createElement('div');
+  const cols=n===1?'1fr':n===2?'1fr 1fr':'1fr 1fr 1fr';
+  row.style.cssText='display:grid;grid-template-columns:'+cols+';gap:8px;';
+  for(let i=0;i<n;i++){
+    const d=zdefs[i]||{mic:12,den:1.4};
+    const div=document.createElement('div');
+    div.className='layer-block lb'+i;
+    div.innerHTML=`
+      <div class="layer-block-header"><span class="layer-pill lc${i}">Layer ${i+1}</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="input-group"><div class="input-label">Micron</div>
+          <div class="input-wrap"><input type="number" id="zmc${i}" value="${d.mic}" min="0.1" step="0.1" oninput="updateZgsm(${i})" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue"><span class="input-unit">mic</span></div>
+        </div>
+        <div class="input-group"><div class="input-label">Density</div>
+          <div class="input-wrap"><input type="number" id="zdn${i}" value="${d.den}" min="0.01" step="0.01" oninput="updateZgsm(${i})" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue"><span class="input-unit">g/cc</span></div>
+        </div>
+        <div class="gsm-badge show" id="zgb${i}" style="opacity:1;text-align:center;width:100%;display:block;">GSM = ${(d.mic*d.den).toFixed(2)}</div>
+      </div>`;
+    row.appendChild(div);
+  }
+  wrap.appendChild(row);
+}
+
+function updateZgsm(i){
+  const m=parseFloat(document.getElementById('zmc'+i).value)||0;
+  const d=parseFloat(document.getElementById('zdn'+i).value)||0;
+  const b=document.getElementById('zgb'+i);
+  if(b) b.textContent=(m&&d)?'GSM = '+(m*d).toFixed(2):'';
+}
+
+function calcZip(){
+  const pW  = parseFloat(document.getElementById('zW').value)||0;
+  const pL  = parseFloat(document.getElementById('zL').value)||0;
+  const gus = parseFloat(document.getElementById('zG').value)||0;
+  const seal= parseFloat(document.getElementById('zSeal').value)||0;
+  const zipWt=parseFloat(document.getElementById('zZip').value)||0;
+  if(!pW||!pL) return;
+
+  // Open Size = (Pouch Length * 2) + Gusset
+  const openW = (pL * 2) + gus;
+  // Length = Pouch Width
+  const lengthMM = pW;
+  const wMt=openW/1000, lMt=lengthMM/1000, sqMt=wMt*lMt;
+
+  let totalMic=0, totalGsm=0, layerWtGm=0;
+  const n=document.querySelectorAll('#zlayers-wrap .layer-block').length;
+  for(let i=0;i<n;i++){
+    const mic=parseFloat(document.getElementById('zmc'+i)?.value)||0;
+    const den=parseFloat(document.getElementById('zdn'+i)?.value)||0;
+    const gsm=mic*den;
+    totalMic+=mic; totalGsm+=gsm;
+    // Weight gm = Width(mt) * Length(mt) * GSM
+    layerWtGm += wMt * lMt * gsm;
+  }
+  // Ink & Adhesive gm = sqMt * sealGsm
+  const inkWtGm = sqMt * seal;
+  // Zipper gm = zipper wt per mm * pouch width mm
+  const zipperGm = zipWt * pW;
+  // POUCH WT gm = layers + ink + zipper
+  const pouchWtGm = layerWtGm + inkWtGm + zipperGm;
+  // PCS/KG = 1000 / pouchWtGm
+  const pcsPerKg = pouchWtGm > 0 ? Math.floor(1000/pouchWtGm) : 0;
+
+  document.getElementById('zr-mic').textContent = totalMic.toFixed(1);
+  document.getElementById('zr-ow').textContent  = openW.toFixed(0);
+  document.getElementById('zr-len').textContent = pW.toFixed(0);
+  document.getElementById('zr-wt').textContent  = pouchWtGm.toFixed(4);
+  document.getElementById('zr-pcs').textContent = pcsPerKg;
+  document.getElementById('zip-results').style.display='block';
+}
+
+buildLayers(3);
+setTimeout(calcCylinder, 100);
+
+function calcCylinder(){
+  const pW       = parseFloat(document.getElementById('cylW').value)||0;
+  const pH       = parseFloat(document.getElementById('cylH').value)||0;
+  const ups      = parseFloat(document.getElementById('cylUps').value)||1;
+  const repeat   = parseFloat(document.getElementById('cylRepeat').value)||1;
+  const extra    = parseFloat(document.getElementById('cylExtra').value)||120;
+  const rate     = parseFloat(document.getElementById('cylRate').value)||21;
+  const transport= parseFloat(document.getElementById('cylTransport').value)||200;
+  const colorsRaw = document.getElementById('cylColors').value;
+  const colors = colorsRaw === '' ? 0 : parseInt(colorsRaw);
+  if(!pW||!pH) return;
+
+  // Excel formulas:
+  // Cylinder width  = (Pouch width * UPS) + Extra space
+  const cylWidth  = (pW * ups) + extra;
+  // Cylinder Circum = Pouch Height * Circum Repeat
+  const cylCircum = pH * repeat;
+  // SQ.MM = (cylWidth * cylCircum) / 1000
+  const sqMm      = (cylWidth * cylCircum) / 1000;
+  // 1 Cylinder price = (SQ.MM * price) + transport
+  const price1    = (sqMm * rate) + transport;
+  // GST = price1 * 18%
+  const gst       = price1 * 0.18;
+  // Total with GST
+  const totalWithGst = price1 + gst;
+  // Amount total cylinder = Total * colours
+  const totalAll  = totalWithGst * colors;
+
+  document.getElementById('cylr-w').textContent     = cylWidth.toFixed(0);
+  document.getElementById('cylr-circ').textContent  = cylCircum.toFixed(0);
+  document.getElementById('cylr-area').textContent  = Number.isInteger(sqMm) ? sqMm.toFixed(0) : sqMm.toFixed(2).replace(/\.?0+$/, '');
+  document.getElementById('cylr-1price').textContent= Math.round(price1).toLocaleString('en-IN');
+  document.getElementById('cylr-gst').textContent   = Math.round(totalWithGst).toLocaleString('en-IN');
+  const totalRow = document.getElementById('total-cyl-row');
+  if(colors && colors > 0){
+    document.getElementById('cylr-total').textContent = Math.round(totalAll).toLocaleString('en-IN');
+    if(totalRow) totalRow.style.display='flex';
+  } else {
+    document.getElementById('cylr-total').textContent = '—';
+    if(totalRow) totalRow.style.display='none';
+  }
+  document.getElementById('cyl-results').style.display='block';
+}
+buildZipLayers(3);
+buildSupnzLayers(3);
+
+function showSnzCombSuggest(){
+  const inp=document.getElementById('snzComb');
+  const box=document.getElementById('snzCombSug');
+  if(!inp||!box) return;
+  const val=inp.value.toLowerCase().trim();
+  const matches=val?combDB.filter(c=>c.toLowerCase().includes(val)):combDB;
+  if(!matches.length){box.style.display='none';return;}
+  box.innerHTML=matches.map(c=>{
+    const esc=c.replace(/'/g,"\'");
+    const hi=val?c.replace(new RegExp('('+val+')','gi'),'<b style="color:var(--accent)">$1</b>'):c;
+    return `<div onclick="pickSnzComb('${esc}')" style="padding:10px 14px;font-size:13px;font-family:'DM Mono',monospace;cursor:pointer;border-bottom:1px solid var(--border);color:var(--text);" onmouseover="this.style.background='var(--adim)'" onmouseout="this.style.background=''">${hi}</div>`;
+  }).join('');
+  box.style.display='block';
+}
+
+function pickSnzComb(val){
+  const inp=document.getElementById('snzComb');
+  if(inp){inp.value=val;inp.style.borderColor='rgba(200,150,12,0.5)';}
+  document.getElementById('snzCombSug').style.display='none';
+  const parts=val.split('+').map(s=>s.trim());
+  selectSupnzLayer(parts.length<=2?parts.length:3);
+  setTimeout(()=>{
+    parts.forEach((matName,i)=>{
+      const mat=matDB.find(m=>m.name.toLowerCase()===matName.toLowerCase());
+      if(mat){const d=document.getElementById('snzdn'+i);if(d){d.value=mat.den;updateSnzgsm(i);}}
+    });
+    const inp2=document.getElementById('snzComb');
+    if(inp2) inp2.value=val;
+  },80);
+}
+
+function showZCombSuggest(){
+  const inp=document.getElementById('zComb');
+  const box=document.getElementById('zCombSug');
+  if(!inp||!box) return;
+  const val=inp.value.toLowerCase().trim();
+  const matches=val?combDB.filter(c=>c.toLowerCase().includes(val)):combDB;
+  if(!matches.length){box.style.display='none';return;}
+  box.innerHTML=matches.map(c=>{
+    const esc=c.replace(/'/g,"\'");
+    const hi=val?c.replace(new RegExp('('+val+')','gi'),'<b style="color:var(--accent)">$1</b>'):c;
+    return `<div onclick="pickZComb('${esc}')" style="padding:10px 14px;font-size:13px;font-family:'DM Mono',monospace;cursor:pointer;border-bottom:1px solid var(--border);color:var(--text);" onmouseover="this.style.background='var(--adim)'" onmouseout="this.style.background=''">${hi}</div>`;
+  }).join('');
+  box.style.display='block';
+}
+
+function pickZComb(val){
+  const inp=document.getElementById('zComb');
+  if(inp){inp.value=val;inp.style.borderColor='rgba(200,150,12,0.5)';}
+  document.getElementById('zCombSug').style.display='none';
+  const parts=val.split('+').map(s=>s.trim());
+  selectZipLayer(parts.length<=2?parts.length:3);
+  setTimeout(()=>{
+    parts.forEach((matName,i)=>{
+      const mat=matDB.find(m=>m.name.toLowerCase()===matName.toLowerCase());
+      if(mat){const d=document.getElementById('zdn'+i);if(d){d.value=mat.den;updateZgsm(i);}}
+    });
+    const inp2=document.getElementById('zComb');
+    if(inp2) inp2.value=val;
+  },80);
+}
+
+let currentSupnzLayers = 3;
+
+function selectSupnzLayer(n){
+  currentSupnzLayers = n;
+  [2,3].forEach(i=>{
+    const b=document.getElementById('snzbtn'+i);
+    if(b) b.classList.toggle('active',i===n);
+  });
+  buildSupnzLayers(n);
+  document.getElementById('snz-results').style.display='none';
+}
+
+function buildSupnzLayers(n){
+  const wrap=document.getElementById('snzlayers-wrap');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  const defs3=[{mic:12,den:1.4},{mic:12,den:1.4},{mic:80,den:0.93}];
+  const defs2=[{mic:12,den:1.4},{mic:80,den:0.93}];
+  const defs=n===2?defs2:defs3;
+  const row=document.createElement('div');
+  const cols=n===2?'1fr 1fr':'1fr 1fr 1fr';
+  row.style.cssText='display:grid;grid-template-columns:'+cols+';gap:8px;';
+  for(let i=0;i<n;i++){
+    const d=defs[i]||{mic:12,den:1.4};
+    const div=document.createElement('div');
+    div.className='layer-block lb'+i;
+    div.innerHTML=`
+      <div class="layer-block-header"><span class="layer-pill lc${i}">Layer ${i+1}</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="input-group"><div class="input-label">Micron</div>
+          <div class="input-wrap"><input type="number" id="snzmc${i}" value="${d.mic}" min="0.1" step="0.1" oninput="updateSnzgsm(${i})" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue"><span class="input-unit">mic</span></div>
+        </div>
+        <div class="input-group"><div class="input-label">Density</div>
+          <div class="input-wrap"><input type="number" id="snzdn${i}" value="${d.den}" min="0.01" step="0.01" oninput="updateSnzgsm(${i})" onfocus="this.select()" onblur="if(this.value==='')this.value=this.defaultValue"><span class="input-unit">g/cc</span></div>
+        </div>
+        <div class="gsm-badge show" id="snzgb${i}" style="opacity:1;text-align:center;width:100%;display:block;">GSM = ${(d.mic*d.den).toFixed(2)}</div>
+      </div>`;
+    row.appendChild(div);
+  }
+  wrap.appendChild(row);
+}
+
+function updateSnzgsm(i){
+  const m=parseFloat(document.getElementById('snzmc'+i).value)||0;
+  const d=parseFloat(document.getElementById('snzdn'+i).value)||0;
+  const b=document.getElementById('snzgb'+i);
+  if(b) b.textContent=(m&&d)?'GSM = '+(m*d).toFixed(2):'';
+}
+
+function calcSupnz(){
+  const pW  = parseFloat(document.getElementById('snzW').value)||0;
+  const pL  = parseFloat(document.getElementById('snzL').value)||0;
+  const gus = parseFloat(document.getElementById('snzG').value)||0;
+  const seal= parseFloat(document.getElementById('snzSeal').value)||0;
+  if(!pW||!pL) return;
+  const openW=(pL*2)+gus;
+  const lengthMM=pW;
+  const wMt=openW/1000, lMt=lengthMM/1000, sqMt=wMt*lMt;
+  let totalMic=0, layerWtGm=0;
+  const n=document.querySelectorAll('#snzlayers-wrap .layer-block').length;
+  for(let i=0;i<n;i++){
+    const mic=parseFloat(document.getElementById('snzmc'+i)?.value)||0;
+    const den=parseFloat(document.getElementById('snzdn'+i)?.value)||0;
+    const gsm=mic*den;
+    totalMic+=mic; layerWtGm+=wMt*lMt*gsm;
+  }
+  const inkWtGm=sqMt*seal;
+  const pouchWtGm=layerWtGm+inkWtGm;
+  const pcsPerKg=pouchWtGm>0?Math.floor(1000/pouchWtGm):0;
+  document.getElementById('snzr-mic').textContent=totalMic.toFixed(1);
+  document.getElementById('snzr-ow').textContent=openW.toFixed(0);
+  document.getElementById('snzr-len').textContent=lengthMM.toFixed(0);
+  document.getElementById('snzr-wt').textContent=pouchWtGm.toFixed(4);
+  document.getElementById('snzr-pcs').textContent=pcsPerKg;
+  document.getElementById('snz-results').style.display='block';
+}
+</script>
+<script>
+// PWA Install
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = document.getElementById('install-btn');
+  if(btn) btn.style.display='flex';
+});
+window.addEventListener('appinstalled', ()=>{
+  deferredPrompt = null;
+  const btn = document.getElementById('install-btn');
+  if(btn) btn.style.display='none';
+});
+
+function installApp(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(()=>{ deferredPrompt=null; });
+  }
+}
+
+// Service Worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    const swCode = `
+const CACHE='pouch-v2';
+self.addEventListener('install',e=>{self.skipWaiting();});
+self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});
+self.addEventListener('fetch',e=>{
+  e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));
+});`;
+    const blob = new Blob([swCode],{type:'text/javascript'});
+    const url = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url,{scope:'./'})
+      .then(()=>console.log('SW ok'))
+      .catch(err=>console.log('SW err:',err));
+  });
+}
+</script>
+</body>
+</html>
